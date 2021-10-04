@@ -6,14 +6,14 @@ FROM golang:latest
 RUN apt-get update
 RUN apt-get install -y apt-utils
 RUN apt-get install -y supervisor
-RUN apt-get install -y dbus
+RUN apt-get install -y dbus iputils-ping
 RUN mkdir -p /var/run/dbus
-
+RUN mkdir -p /etc/salt
+RUN touch /etc/salt/minion_id
 RUN mkdir -p /var/log/supervisor
 # server for automated testing
 EXPOSE 2040
 EXPOSE 80
-    
 COPY  thermal-recorder.conf /etc/supervisor/conf.d/thermal-recorder.conf
 COPY  thermal-uploader.conf /etc/supervisor/conf.d/thermal-uploader.conf
 COPY  event-reporter.conf /etc/supervisor/conf.d/event-reporter.conf

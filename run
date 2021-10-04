@@ -85,7 +85,6 @@ if not args.cache:
     build_container_cmd.append("--no-cache")
 subprocess.check_call(add_sudo(build_container_cmd))
 
-print("go path is " + os.environ["GOPATH"])
 
 print("Starting container")
 print("volume is " + os.getcwd())
@@ -101,6 +100,8 @@ run_cmd = [
     "2040:2040",
     "--volume",
     os.getcwd() + ":/server",
+    # "--volume",
+    # base_path + "/modemd" + ":/code/modemd",
     "--volume",
     base_path + "/device-register" + ":/code/device-register",
     "--volume",
@@ -113,8 +114,6 @@ run_cmd = [
     base_path + "/management-interface" + ":/code/management-interface",
     "--volume",
     os.getcwd() + "/cmd/fake-lepton/cptv-files" + ":/cptv-files",
-    "--volume",
-    os.environ["GOPATH"] + ":/go",
 ]
 
 # if args.isolate:
