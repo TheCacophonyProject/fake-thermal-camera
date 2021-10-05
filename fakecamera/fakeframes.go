@@ -60,11 +60,10 @@ func addHotspots(pix [][]uint16, hotspots []hotspot) {
 	}
 }
 
-func setStatus(telemetry *cptvframe.Telemetry, timeon time.Duration, ffc bool, plusMS int, lastFFC int) {
-	telemetry.TimeOn = timeon + time.Duration(plusMS)*time.Millisecond
+func setStatus(telemetry *cptvframe.Telemetry, ffc bool, plusMS int, lastFFC int) {
 	if ffc {
 		telemetry.FFCState = lepton3.FFCRunning
-		telemetry.LastFFCTime = timeon + time.Duration(plusMS)*time.Millisecond
+		telemetry.LastFFCTime = telemetry.TimeOn  + time.Duration(plusMS)*time.Millisecond
 	}
 	if lastFFC >= 0 {
 		telemetry.LastFFCTime = time.Duration(lastFFC) * time.Second
@@ -80,7 +79,7 @@ func (f *frameMaker) NextFrame() (*cptvframe.Frame, error) {
 	}
 
 	addHotspots(frame.Pix, f.hotspots)
-	setStatus(&frame.Status, time.Since(startTime), f.ffc, 0, f.lastFFC)
+	setStatus(&frame.Status,  f.ffc, 0, f.lastFFC)
 	return frame, err
 }
 

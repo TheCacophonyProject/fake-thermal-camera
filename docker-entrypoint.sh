@@ -26,14 +26,6 @@ cd /code/thermal-uploader/
 echo Building thermal-uploader....
 go build ./...
 
-echo --- fake-lepton ----
-cd /server
-echo Building fake-lepton....
-cd cmd/fake-lepton/
-go build
-cp org.cacophony.FakeLepton.conf /etc/dbus-1/system.d/org.cacophony.FakeLepton.conf
-
-
 echo --- management interface ----
 cd /code/management-interface/
 echo Building management-interface....

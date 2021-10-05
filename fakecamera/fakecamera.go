@@ -241,7 +241,6 @@ func sendFrames(conn *net.UnixConn, params *params, f *frameMaker) error {
 		if err != nil {
 			break
 		}
-
 		buf := rawTelemetryBytes(frame.Status)
 		_ = binary.Write(buf, binary.BigEndian, reaminingBytes)
 		for _, row := range frame.Pix {
