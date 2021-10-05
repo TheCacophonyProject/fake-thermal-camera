@@ -9,7 +9,6 @@
   warmer-only = true
   run-classifier = false
   dynamic-threshold = true
-  verbose = true
 
 [thermal-recorder]
   max-secs = 299
