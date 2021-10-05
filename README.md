@@ -5,12 +5,12 @@
 | Project  | fake-thermal-camera                                                        |
 | -------- | -------------------------------------------------------------------------- |
 | Platform | Linux                                                                      |
-| Requires | Git repository [`feverscreen`](https://github.com/feverscreen/feverscreen) |
+| Requires | Git repository [`TheCacophonyProject`](https://github.com/TheCacophonyProject/feverscreen) |
 | Licence  | GNU General Public License v3.0                                            |
 
 ## Development Instructions
 
-Download fake-thermal-camera and feverscreen into the same folder.
+Download fake-thermal-camera
 
 Make sure Docker has been installed.
 
@@ -20,7 +20,7 @@ In the fake-thermal-camera folder start the test server with
 > ./run
 ```
 
-Open up http://localhost:2041/ to see the feverscreen display.
+Open up http://localhost:2041/ to see the camera display.
 
 Put any CPTV files that you want to send to the fake camera in the directory fake-thermal-camera/fakecamera/cptv-files
 

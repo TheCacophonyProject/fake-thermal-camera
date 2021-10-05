@@ -9,20 +9,22 @@ try:
     # *nix specific
     import grp
 
-
     def current_user_in_group(group_name):
         try:
             current_user = getpass.getuser()
             return current_user in grp.getgrnam(group_name).gr_mem
         except KeyError:
             return False
+
+
 except ImportError:
     # We're on windows, and can ignore this.
     def current_user_in_group(group_name):
         return True
 
-IMAGE_NAME = "fake-feverscreen-camera"
-CONTAINER_NAME = "fake-feverscreen-camera"
+
+IMAGE_NAME = "cacophony-fake-thermal-camera"
+CONTAINER_NAME = "cacophony-fake-thermal-camera"
 
 
 parser = argparse.ArgumentParser(
@@ -62,6 +64,7 @@ def check_docker_can_run():
         stderr=subprocess.DEVNULL,
         timeout=30,
     )
+
 
 use_sudo = args.sudo
 if not args.sudo:
@@ -107,24 +110,18 @@ run_cmd = [
     "2041:80",
     "--volume",
     os.getcwd() + ":/server",
-    # "--volume",
-    # base_path + "/modemd" + ":/code/modemd",
     "--volume",
     base_path + "/device-register" + ":/code/device-register",
     "--volume",
     base_path + "/event-reporter" + ":/code/event-reporter",
     "--volume",
-    base_path + "/feverscreen" + ":/code/feverscreen",
+    base_path + "/thermal-recorder" + ":/code/thermal-recorder",
     "--volume",
     base_path + "/thermal-uploader" + ":/code/thermal-uploader",
     "--volume",
-<<<<<<< HEAD
     base_path + "/management-interface" + ":/code/management-interface",
     "--volume",
-    os.getcwd() + "/cmd/fake-lepton/cptv-files" + ":/cptv-files",
-=======
     os.getcwd() + "/fakecamera/cptv-files" + ":/cptv-files",
->>>>>>> fs/master
 ]
 
 

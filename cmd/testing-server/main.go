@@ -14,7 +14,7 @@ import (
 
 	config "github.com/TheCacophonyProject/go-config"
 	arg "github.com/alexflint/go-arg"
-	camera "github.com/feverscreen/fake-thermal-camera/fakecamera"
+	camera "github.com/TheCacophonyProject/fake-thermal-camera/fakecamera"
 )
 
 type argSpec struct {
@@ -84,7 +84,6 @@ func createDeviceHandler(w http.ResponseWriter, r *http.Request) {
 			"password_"+deviceName,
 			"--api",
 			apiServer,
-			"--ignore-minion-id",
 			"--remove-device-config")
 
 		cmd.Dir = "/code/device-register"

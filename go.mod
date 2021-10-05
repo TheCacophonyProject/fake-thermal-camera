@@ -1,4 +1,4 @@
-module github.com/feverscreen/fake-thermal-camera
+module github.com/TheCacophonyProject/fake-thermal-camera
 
 replace periph.io/x/periph => github.com/TheCacophonyProject/periph v1.0.1-0.20200331204442-4717ddfb6980
 
@@ -10,12 +10,11 @@ require (
 	github.com/TheCacophonyProject/lepton3 v0.0.0-20200430221413-9df342ce97f9
 	github.com/TheCacophonyProject/thermal-recorder v1.22.1-0.20200225033227-2090330c5c11
 	github.com/alexflint/go-arg v1.3.0
+	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/godbus/dbus v4.1.0+incompatible
 	github.com/gorilla/mux v1.7.4
-	github.com/stretchr/testify v1.4.0 // indirect
-	golang.org/x/net v0.0.0-20200513185701-a91f0712d120 // indirect
-	golang.org/x/sys v0.0.0-20200513112337-417ce2331b5c // indirect
+	github.com/markbates/refresh v1.12.0 // indirect
+	github.com/spf13/viper v1.8.1 // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/yaml.v1 v1.0.0-20140924161607-9f9df34309c0
-	gopkg.in/yaml.v2 v2.3.0 // indirect
 )
