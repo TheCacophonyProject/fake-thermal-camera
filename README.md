@@ -5,21 +5,21 @@
 | Project  | fake-thermal-camera                                                        |
 | -------- | -------------------------------------------------------------------------- |
 | Platform | Linux                                                                      |
-| Requires | Git repository [`TheCacophonyProject`](https://github.com/TheCacophonyProject/feverscreen) |
+| Requires | Git repository [`TheCacophonyProject`](https://github.com/TheCacophonyProject/fake-thermal-camera) |
 | Licence  | GNU General Public License v3.0                                            |
 
 ## Development Instructions
 
-Download fake-thermal-camera
+Download fake-thermal-camera, and device-register, thermal-recorder, thermal-uploader, event-reporter, management-interface project into the same folder.
 
-Make sure Docker has been installed.
+Make sure the [`cacophony-api`](https://github.com/TheCacophonyProject/cacophony-api) server the devices will attach to is also running
 
 In the fake-thermal-camera folder start the test server with
 
 ```
 > ./run
 ```
-
+Now you can start calling server commands.  You should create a device before you get started.
 Open up http://localhost:2041/ to see the camera display.
 
 Put any CPTV files that you want to send to the fake camera in the directory fake-thermal-camera/fakecamera/cptv-files
@@ -30,15 +30,17 @@ Put any CPTV files that you want to send to the fake camera in the directory fak
 
 _Send file / generated CPTV frames_
 
-All query parameters are optional. If you don't specify a file name it will try to use the file person.cptv
+All query parameters are optional. If you don't specify a file name it will try to use the file possum.cptv
 
-- cptv-file: {_string_} cptv-file to send (defaults to person.cptv)
+- cptv-file: {_string_} cptv-file to send (defaults to possum.cptv)
 - start: {_number_} first frame to send
 - end: {_number_} frame to stop sending at
 - generate: {_boolean_} whether or not to generate frames, if unspecified or false cptv-file will be used
 - repeat: {_number_} number of times to repeat the sending of file or number of frames to generate (defaults to 1)
 - minTemp: {_number_} min temp of frame (defaults to 3000)
 - maxTemp: {_number_} max temp of frame (defaults to 4000)
+- fps: {_number_} frame rate to use (defaults to cptv file frame rate or 9)
+
 - ffc: {_boolean_} if set to true, all generated / file frames will be ffc frames (defaults to false).
 - ffc-time: {_number_} overrides the last ffc time in the telemetry of every frame
 - enqueue: {_boolean_} whether to enqueue the sending of these frames (defaults to false).
@@ -57,7 +59,7 @@ All query parameters are optional. If you don't specify a file name it will try 
 
 1. `http://localhost:2040/sendCPTVFrames?repeat=10&hotspots=[{"shapeType":"circle","x":-5,"y":0,"width":20,"height":20,"minTemp":5000,"maxTemp":6000}]`
 
-   - This draws a circle hotspot over every frame of the default cptv-file (person.cptv), this will be repeated 10 times (the CPTV file will be played back 10 times)
+   - This draws a circle hotspot over every frame of the default cptv-file (possum.cptv), this will be repeated 10 times (the CPTV file will be played back 10 times)
    - The hotspot will be the biggest circle that fits into the square, starting at top left (-5,0) with width 20 and height 20. The values of the hotspot will range between 5000 and 6000
 
 1. `http://localhost:2040/sendCPTVFrames?generate=True&hotspots=[{"shapeType":"rectangle","x":25,"y":30,"width":15,"height":50,"minTemp":4500,"maxTemp":4500}, {"shapeType":"circle","x":50,"y":50,"width":20,"height":40,"minTemp":5000,"maxTemp":6000}]`
