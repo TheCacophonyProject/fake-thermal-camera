@@ -10,11 +10,17 @@ RUN apt-get install -y dbus
 RUN mkdir -p /var/run/dbus
 RUN apt-get install -y dbus iputils-ping
 
+#NPM
+RUN apt-get -y install curl gnupg
+RUN curl -sL https://deb.nodesource.com/setup_14.x  | bash -
+RUN apt-get -y install nodejs
+RUN npm install
+
 RUN mkdir -p /etc/salt
 RUN touch /etc/salt/minion_id
 RUN mkdir -p /var/log/supervisor
 
-RUN go get github.com/gobuffalo/packr/packr
+RUN go install github.com/gobuffalo/packr/packr@latest
 
 COPY go* /dependencies/
 WORKDIR /dependenciesf
