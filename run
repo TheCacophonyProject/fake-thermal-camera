@@ -4,8 +4,24 @@ import argparse
 import os
 import subprocess
 import getpass
-import grp
-import urllib.request
+
+try:
+    # *nix specific
+    import grp
+
+    def current_user_in_group(group_name):
+        try:
+            current_user = getpass.getuser()
+            return current_user in grp.getgrnam(group_name).gr_mem
+        except KeyError:
+            return False
+
+
+except ImportError:
+    # We're on windows, and can ignore this.
+    def current_user_in_group(group_name):
+        return True
+
 
 IMAGE_NAME = "cacophony-fake-thermal-camera"
 CONTAINER_NAME = "cacophony-fake-thermal-camera"
@@ -50,14 +66,6 @@ def check_docker_can_run():
     )
 
 
-def current_user_in_group(group_name):
-    try:
-        current_user = getpass.getuser()
-        return current_user in grp.getgrnam(group_name).gr_mem
-    except KeyError:
-        return False
-
-
 use_sudo = args.sudo
 if not args.sudo:
     if not current_user_in_group("docker"):
@@ -85,7 +93,6 @@ if not args.cache:
     build_container_cmd.append("--no-cache")
 subprocess.check_call(add_sudo(build_container_cmd))
 
-print("go path is " + os.environ["GOPATH"])
 
 print("Starting container")
 print("volume is " + os.getcwd())
@@ -99,6 +106,8 @@ run_cmd = [
     CONTAINER_NAME,
     "-p",
     "2040:2040",
+    "-p",
+    "2041:80",
     "--volume",
     os.getcwd() + ":/server",
     "--volume",
@@ -112,10 +121,9 @@ run_cmd = [
     "--volume",
     base_path + "/management-interface" + ":/code/management-interface",
     "--volume",
-    os.getcwd() + "/cmd/fake-lepton/cptv-files" + ":/cptv-files",
-    "--volume",
-    os.environ["GOPATH"] + ":/go",
+    os.getcwd() + "/fakecamera/cptv-files" + ":/cptv-files",
 ]
+
 
 # if args.isolate:
 #     run_cmd.extend(

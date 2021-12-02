@@ -13,9 +13,31 @@ import (
 	"github.com/gorilla/mux"
 
 	config "github.com/TheCacophonyProject/go-config"
+	arg "github.com/alexflint/go-arg"
+	camera "github.com/TheCacophonyProject/fake-thermal-camera/fakecamera"
 )
 
+type argSpec struct {
+	CPTVDir   string `arg:"-c,--cptv-dir" help:"base path of cptv files"`
+	ConfigDir string `arg:"-c,--config" help:"path to configuration directory"`
+}
+
+var (
+	cptvDir = "/cptv-files"
+)
+
+func procArgs() argSpec {
+	args := argSpec{CPTVDir: cptvDir}
+	args.ConfigDir = config.DefaultConfigDir
+
+	arg.MustParse(&args)
+	return args
+}
+
 func main() {
+	args := procArgs()
+	go camera.RunCamera(args.CPTVDir, args.ConfigDir)
+
 	if err := runServer(); err != nil {
 		log.Fatal(err)
 	}
@@ -31,6 +53,7 @@ func runServer() error {
 	router.HandleFunc("/", homeHandler)
 	router.HandleFunc("/triggerEvent/{type}", triggerEventHandler)
 	router.HandleFunc("/sendCPTVFrames", sendCPTVFramesHandler)
+	router.HandleFunc("/playback", playbackHandler)
 
 	log.Fatal(http.ListenAndServe(":2040", router))
 	return nil
@@ -61,7 +84,6 @@ func createDeviceHandler(w http.ResponseWriter, r *http.Request) {
 			"password_"+deviceName,
 			"--api",
 			apiServer,
-			"--ignore-minion-id",
 			"--remove-device-config")
 
 		cmd.Dir = "/code/device-register"
@@ -128,25 +150,19 @@ func triggerEventHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func sendCPTVFramesHandler(w http.ResponseWriter, r *http.Request) {
-	fileName := r.URL.Query().Get("cptv-file")
+	queryVars := r.URL.Query()
+	fileName := queryVars.Get("cptv-file")
 	if fileName == "" {
-		fileName = "test.cptv"
+		queryVars.Set("cptv-file", "possum.cptv")
 	}
-	conn, err := dbus.SystemBus()
-	if err != nil {
-		logError(fmt.Sprintf("Could not connect to dbus: %v", err), w, http.StatusInternalServerError)
-		return
-	}
-	obj := conn.Object("org.cacophony.FakeLepton", "/org/cacophony/FakeLepton")
-	call := obj.Call("org.cacophony.FakeLepton.SendCPTV", 0, fileName)
-	if call.Err != nil {
-
-		logError(fmt.Sprintf("Could not send CPTV %s: %s", fileName, call.Err), w, http.StatusInternalServerError)
-
-		return
-	}
+	camera.Send(queryVars)
 
 	log.Printf("Sent CPTV Frames")
+	io.WriteString(w, "Success")
+}
+
+func playbackHandler(w http.ResponseWriter, r *http.Request) {
+	camera.Playback(r.URL.Query())
 	io.WriteString(w, "Success")
 }
 

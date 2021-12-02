@@ -1,20 +1,21 @@
 [thermal-motion]
   count-thresh = 3
-  delta-thresh = 50
+  delta-thresh = 200
   edge-pixels = 1
   frame-compare-gap = 45
-  temp-thresh = 2850
-  trigger-frames = 1
+  temp-thresh = 28000
+  trigger-frames = 2
   use-one-diff-only = true
   warmer-only = true
   run-classifier = false
+  dynamic-threshold = true
 
 [thermal-recorder]
   max-secs = 299
   min-disk-space-mb = 200
   min-secs = 10
   output-dir = "/var/spool/cptv"
-  preview-secs = 1
+  preview-secs = 5
   updated = 2019-10-10T11:49:24+13:00
 
 [thermal-throttler]

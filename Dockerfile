@@ -8,27 +8,35 @@ RUN apt-get install -y apt-utils
 RUN apt-get install -y supervisor
 RUN apt-get install -y dbus
 RUN mkdir -p /var/run/dbus
+RUN apt-get install -y dbus iputils-ping
 
+#NPM
+RUN apt-get -y install curl gnupg
+RUN curl -sL https://deb.nodesource.com/setup_14.x  | bash -
+RUN apt-get -y install nodejs
+RUN npm install
+
+RUN mkdir -p /etc/salt
+RUN touch /etc/salt/minion_id
 RUN mkdir -p /var/log/supervisor
+
+RUN go install github.com/gobuffalo/packr/packr@latest
+
+COPY go* /dependencies/
+WORKDIR /dependenciesf
+RUN ls -R
+
+
 # server for automated testing
 EXPOSE 2040
 EXPOSE 80
-    
 COPY  thermal-recorder.conf /etc/supervisor/conf.d/thermal-recorder.conf
 COPY  thermal-uploader.conf /etc/supervisor/conf.d/thermal-uploader.conf
 COPY  event-reporter.conf /etc/supervisor/conf.d/event-reporter.conf
-COPY  fake-lepton.conf /etc/supervisor/conf.d/fake-lepton.conf
 COPY  management-interface.conf /etc/supervisor/conf.d/management-interface.conf
-
-
-# WORKDIR /server
-# RUN ls
-# RUN go get ./...
-# RUN go build ./...
-# RUN testing-server
 COPY  docker-entrypoint.sh /
-RUN mkdir /etc/cacophony
-RUN mkdir /var/spool/cptv
+RUN mkdir -p /etc/cacophony
+RUN mkdir -p /var/spool/cptv
 
 COPY recorder-config.toml /etc/cacophony/config.toml
 
